@@ -75,3 +75,20 @@ def adjust_brightness_contrast(
     # 0~255 범위로 클리핑하고 uint8로 변환해 준다.
     adjusted = cv2.convertScaleAbs(img, alpha=alpha, beta=beta)
     return adjusted
+
+
+def edge_detect(
+    img: np.ndarray,
+    threshold1: int = 100,
+    threshold2: int = 200,
+) -> np.ndarray:
+    """
+    Canny 엣지 검출을 이용해 윤곽선을 추출한다.
+
+    threshold1, threshold2:
+        Canny 알고리즘에서 사용하는 하한/상한 임계값.
+        값이 낮을수록 더 많은 엣지가 검출된다.
+    """
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray, threshold1, threshold2)
+    return edges

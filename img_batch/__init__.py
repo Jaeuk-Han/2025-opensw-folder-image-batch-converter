@@ -5,6 +5,7 @@ from .ops import (
     rotate_image,
     flip_image,
     adjust_brightness_contrast,
+    edge_detect,
 )
 
 __all__ = [
@@ -14,6 +15,7 @@ __all__ = [
     "rotate_image",
     "flip_image",
     "adjust_brightness_contrast",
+    "edge_detect",
 ]
 
 __version__ = "0.1.0"
