@@ -31,3 +31,31 @@ def to_gray(img: np.ndarray) -> np.ndarray:
     BGR 이미지를 그레이스케일로 변환한다.
     """
     return cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+
+def rotate_image(img: np.ndarray, angle: float) -> np.ndarray:
+    """
+    이미지를 중심 기준으로 angle(도 단위) 만큼 회전시킨다.
+    양수: 반시계 방향, 음수: 시계 방향
+    """
+    h, w = img.shape[:2]
+    center = (w / 2, h / 2)
+    M = cv2.getRotationMatrix2D(center, angle, 1.0)
+    rotated = cv2.warpAffine(img, M, (w, h))
+    return rotated
+
+
+def flip_image(img: np.ndarray, mode: str = "horizontal") -> np.ndarray:
+    """
+    이미지를 좌우/상하 반전한다.
+
+    mode:
+        - "horizontal" : 좌우 반전
+        - "vertical"   : 상하 반전
+    """
+    if mode == "horizontal":
+        return cv2.flip(img, 1)
+    elif mode == "vertical":
+        return cv2.flip(img, 0)
+    else:
+        raise ValueError("mode는 'horizontal' 또는 'vertical' 이어야 합니다.")

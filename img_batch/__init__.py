@@ -1,4 +1,17 @@
-from .ops import resize_image, blur_image, to_gray
+from .ops import (
+    resize_image,
+    blur_image,
+    to_gray,
+    rotate_image,
+    flip_image,
+)
 
-__all__ = ["resize_image", "blur_image", "to_gray"]
+__all__ = [
+    "resize_image",
+    "blur_image",
+    "to_gray",
+    "rotate_image",
+    "flip_image",
+]
+
 __version__ = "0.1.0"
