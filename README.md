@@ -8,6 +8,8 @@
 
 자세한 사용법은 아래 예시 코드나 **examples/demo_image_ops.py**를 참고해주세요.
 
+의존성에 대해서는 pyproject.toml 확인하시면 됩니다.
+
 현재 제공되는 주요 함수:
 
 - `resize_image(img, width, height)`
@@ -64,6 +66,19 @@ edges = edge_detect(resized, threshold1=100, threshold2=200)
 
 cv2.imwrite("output_resize.png", resized)
 cv2.imwrite("output_edges.png", edges)
+```
+---
+
+## 테스트용 데모 코드(demo_image_ops.py) 사용 예시
+
+`img_batch` 모듈의 기능 예시와 테스트를 위한 코드의 실행 예시입니다.
+
+poetry가 아닌 다른 환경에서 진행하실때는 앞에 **poetry run** 빼시고 CLI에 입력하시면 됩니다.
+
+```bash
+poetry run python examples/demo_image_ops.py \
+    --input examples/input/sample.png \
+    --output-dir examples/output_demo
 ```
 
 ---
