@@ -16,6 +16,5 @@ env/
 # Poetry 관련 파일 
 # pyproject.toml / poetry.lock
 
-
-# 테스트 폴더
-
+# 테스트 생성물 (출력 이미지)
+examples/output_demo/
