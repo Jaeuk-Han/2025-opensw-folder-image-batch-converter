@@ -15,12 +15,18 @@ from pathlib import Path
 
 import cv2
 
-from img_batch import resize_image, blur_image, to_gray  # 우리 패키지에서 가져옴
+from img_batch import (
+    resize_image,
+    blur_image,
+    to_gray,
+    rotate_image,
+    flip_image,
+)
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="img_batch 이미지 변환 함수 테스트 (resize / gray / blur)"
+        description="img_batch 이미지 변환 함수 테스트 (resize / gray / blur / rotate / flip)"
     )
     parser.add_argument(
         "--input",
@@ -57,9 +63,8 @@ def main() -> int:
 
     print(f"[INFO] 입력 이미지 크기: {img.shape[1]}x{img.shape[0]} (W x H)")
 
-    # 파일 이름/확장자 나누기
     stem = input_path.stem
-    suffix = input_path.suffix  # .jpg, .png 등
+    suffix = input_path.suffix  # .png, .jpg 등
 
     # 2) 리사이즈 테스트 (예: 300x300)
     resized = resize_image(img, width=300, height=300)
@@ -69,7 +74,6 @@ def main() -> int:
 
     # 3) 그레이스케일 테스트
     gray = to_gray(img)
-    # 그레이스케일은 보통 .jpg 그대로 저장해도 되고, 필요하면 png로 바꿔도 됨
     out_gray = output_dir / f"{stem}_gray{suffix}"
     cv2.imwrite(str(out_gray), gray)
     print(f"[INFO] 그레이스케일 결과 저장: {out_gray}")
@@ -80,7 +84,24 @@ def main() -> int:
     cv2.imwrite(str(out_blur), blurred)
     print(f"[INFO] 블러 결과 저장: {out_blur}")
 
-    print("[DONE] img_batch 테스트용 변환 3종 완료")
+    # 5) 회전 테스트 (예: 90도)
+    rotated_90 = rotate_image(img, angle=90.0)
+    out_rotate_90 = output_dir / f"{stem}_rotate_90{suffix}"
+    cv2.imwrite(str(out_rotate_90), rotated_90)
+    print(f"[INFO] 회전(90도) 결과 저장: {out_rotate_90}")
+
+    # 6) 플립 테스트 (좌우 / 상하)
+    flipped_h = flip_image(img, mode="horizontal")
+    out_flip_h = output_dir / f"{stem}_flip_horizontal{suffix}"
+    cv2.imwrite(str(out_flip_h), flipped_h)
+    print(f"[INFO] 좌우 반전 결과 저장: {out_flip_h}")
+
+    flipped_v = flip_image(img, mode="vertical")
+    out_flip_v = output_dir / f"{stem}_flip_vertical{suffix}"
+    cv2.imwrite(str(out_flip_v), flipped_v)
+    print(f"[INFO] 상하 반전 결과 저장: {out_flip_v}")
+
+    print("[DONE] img_batch 테스트용 변환 6종 완료")
     return 0
 
 
