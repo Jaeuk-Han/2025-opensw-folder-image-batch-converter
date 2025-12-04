@@ -59,3 +59,19 @@ def flip_image(img: np.ndarray, mode: str = "horizontal") -> np.ndarray:
         return cv2.flip(img, 0)
     else:
         raise ValueError("mode는 'horizontal' 또는 'vertical' 이어야 합니다.")
+
+def adjust_brightness_contrast(
+    img: np.ndarray,
+    alpha: float = 1.0,
+    beta: float = 0.0,
+) -> np.ndarray:
+    """
+    이미지의 대비(contrast)와 밝기(brightness)를 조절한다.
+
+    alpha: 대비 계수 (1.0: 원본, >1.0: 대비 증가, 0~1.0: 대비 감소)
+    beta : 밝기 오프셋 (0: 원본, >0: 더 밝게, <0: 더 어둡게)
+    """
+    # convertScaleAbs는 내부적으로 img * alpha + beta 를 계산한 뒤
+    # 0~255 범위로 클리핑하고 uint8로 변환해 준다.
+    adjusted = cv2.convertScaleAbs(img, alpha=alpha, beta=beta)
+    return adjusted
