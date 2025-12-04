@@ -22,12 +22,13 @@ from img_batch import (
     rotate_image,
     flip_image,
     adjust_brightness_contrast,
+    edge_detect,
 )
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="img_batch 이미지 변환 함수 테스트 (resize / gray / blur / rotate / flip / brightness)"
+        description="img_batch 이미지 변환 함수 테스트 (resize / gray / blur / rotate / flip / brightness / edge)"
     )
     parser.add_argument(
         "--input",
@@ -108,7 +109,13 @@ def main() -> int:
     cv2.imwrite(str(out_bright), brighter)
     print(f"[INFO] 밝기/대비 조절 결과 저장: {out_bright}")
 
-    print("[DONE] img_batch 테스트용 변환 7종 완료")
+    # 8) 엣지 검출 테스트 (예: threshold1=100, threshold2=200)
+    edges = edge_detect(img, threshold1=100, threshold2=200)
+    out_edge = output_dir / f"{stem}_edge_t100_200{suffix}"
+    cv2.imwrite(str(out_edge), edges)
+    print(f"[INFO] 엣지 검출 결과 저장: {out_edge}")
+
+    print("[DONE] img_batch 테스트용 변환 8종 완료")
     return 0
 
 
