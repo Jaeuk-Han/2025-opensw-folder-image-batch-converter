@@ -21,12 +21,13 @@ from img_batch import (
     to_gray,
     rotate_image,
     flip_image,
+    adjust_brightness_contrast,
 )
 
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="img_batch 이미지 변환 함수 테스트 (resize / gray / blur / rotate / flip)"
+        description="img_batch 이미지 변환 함수 테스트 (resize / gray / blur / rotate / flip / brightness)"
     )
     parser.add_argument(
         "--input",
@@ -101,7 +102,13 @@ def main() -> int:
     cv2.imwrite(str(out_flip_v), flipped_v)
     print(f"[INFO] 상하 반전 결과 저장: {out_flip_v}")
 
-    print("[DONE] img_batch 테스트용 변환 6종 완료")
+    # 7) 밝기/대비 조절 테스트 (예: alpha=1.2, beta=30)
+    brighter = adjust_brightness_contrast(img, alpha=1.2, beta=30.0)
+    out_bright = output_dir / f"{stem}_bright_a1.2_b30{suffix}"
+    cv2.imwrite(str(out_bright), brighter)
+    print(f"[INFO] 밝기/대비 조절 결과 저장: {out_bright}")
+
+    print("[DONE] img_batch 테스트용 변환 7종 완료")
     return 0
 
 
