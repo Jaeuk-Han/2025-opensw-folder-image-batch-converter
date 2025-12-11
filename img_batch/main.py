@@ -1,6 +1,17 @@
 import argparse
 import sys
 import os
+import cv2
+
+# 같은 패키지 내의 모듈 import (상대 경로 사용)
+# 패키지로 실행 시: python -m img_batch.main
+try:
+    from .io_utils import get_image_files, ensure_output_dir
+    from .ops import resize_image, blur_image, to_gray
+except ImportError:
+    # 혹시 단독 스크립트로 실행할 경우를 대비한 예외처리
+    from io_utils import get_image_files, ensure_output_dir
+    from ops import resize_image, blur_image, to_gray
 
 def main():
     parser = argparse.ArgumentParser(description="폴더 이미지 일괄 변환기 (2025 OpenSW)")
@@ -42,7 +53,53 @@ def main():
         print("[Error] 블러 크기(ksize)는 1보다 커야 합니다.")
         sys.exit(1)
 
-    print(f"[Check] 옵션 검증 통과. (모드: {args.mode})")
+    # 3. 작업 시작
+    print(f"=== 작업 시작: {args.mode} 모드 ===")
+
+    # 파일 목록 가져오기 (io_utils)
+    try:
+        image_files = get_image_files(args.input)
+    except Exception as e:
+        print(f"[Error] {e}")
+        sys.exit(1)
+
+    if not image_files:
+        print("[System] 처리할 이미지가 없습니다.")
+        sys.exit(0)
+
+    # 출력 폴더 생성 (io_utils)
+    ensure_output_dir(args.output)
+
+    success_cnt = 0
+    fail_cnt = 0
+
+    for path in image_files:
+        # 이미지 읽기
+        img = cv2.imread(str(path))
+        if img is None:
+            print(f"[Skip] 이미지 읽기 실패: {path.name}")
+            fail_cnt += 1
+            continue
+
+        # 변환 로직 (ops)
+        processed = img  # 기본은 copy
+        
+        if args.mode == 'resize':
+            processed = resize_image(img, args.width, args.height)
+        elif args.mode == 'gray':
+            processed = to_gray(img)
+        elif args.mode == 'blur':
+            processed = blur_image(img, args.ksize)
+        
+        # 저장
+        save_path = os.path.join(args.output, path.name)
+        cv2.imwrite(save_path, processed)
+        print(f"[OK] {path.name} 저장 완료")
+        success_cnt += 1
+
+    print("=" * 40)
+    print(f"작업 완료! 성공: {success_cnt}, 실패: {fail_cnt}")
+    print(f"결과 폴더: {args.output}")
 
 if __name__ == "__main__":
     main()
