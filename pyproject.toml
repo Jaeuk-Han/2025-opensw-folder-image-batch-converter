@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "opensw-img-batch"
+version = "0.1.0"
+description = "Batch convert images in a folder (resize, grayscale, blur) via a simple Python + OpenCV CLI tool, developed as a 2025 Gachon University OpenSW course team project."
+authors = ["Jaeuk Han <jaeuk@gmail.com>"]
+readme = "README.md"
+packages = [
+    { include = "img_batch" }
+]
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+opencv-python = "^4.10.0.0"
+numpy = "^1.26.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
+
+[tool.poetry.scripts]
+img-batch = "img_batch.cli:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

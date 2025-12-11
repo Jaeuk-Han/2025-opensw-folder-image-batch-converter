@@ -1,0 +1,20 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.dll
+
+# 가상환경
+.venv/
+venv/
+env/
+.env
+.env.*
+
+# Poetry 관련 파일 
+# pyproject.toml / poetry.lock
+
+# 테스트 생성물 (출력 이미지)
+examples/output_demo/
