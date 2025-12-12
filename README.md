@@ -1,146 +1,347 @@
-# 2025 OpenSW – Folder Image Batch Converter
+# 2025 OpenSource SW – Folder Image Batch Converter
 
-## 현재까지 구현된 내용 (이미지 처리 파트)
+A **Python-based Command Line Interface (CLI) tool** that processes multiple image files in batch by reading them from a folder and applying image transformations such as **resize, grayscale conversion, and blur**.
 
-1단계로 리사이즈, 흑백, 블러 등의 모드를 지원하는 이미지 처리 함수를 패키지 형태로 구현해 두었습니다.  
-
-폴더 단위로 이미지를 불러와 copy/gray/blur/resize 모드로 일괄 변환하는 스크립트(`folder_copy_basic.py`)가 추가되었습니다.
-
-
-`img_batch` 모듈을 import 해서 단일 이미지를 처리하면 됩니다.
-폴더 단위 처리는 examples/folder_copy_basic.py에서 수행할 수 있습니다.
-
-자세한 사용법은 아래 예시 코드나 **examples/demo_image_ops.py**를 참고해주세요.
-폴더 일괄 변환 예시인 examples/folder_copy_basic.py를 참고해주세요.
-
-의존성에 대해서는 pyproject.toml 확인하시면 됩니다.
-
-현재 제공되는 주요 함수:
-
-- `resize_image(img, width, height)`
-- `blur_image(img, ksize)`
-- `to_gray(img)`
-- `rotate_image(img, angle)`
-- `flip_image(img, mode)`  (`"horizontal"` / `"vertical"`)
-- `adjust_brightness_contrast(img, alpha, beta)`
-- `edge_detect(img, threshold1, threshold2)`
-
-추가된 폴더 처리 기능 (folder_copy_basic.py):
-
-- 입력 폴더에서 이미지 파일 목록 읽기 (get_image_files)
-- 출력 폴더 자동 생성 (ensure_output_dir)
-- --mode 옵션을 통해 copy / gray / blur / resize 선택 가능
-- resize 모드에서 --width, --height 지정 가능
-- blur 모드에서 --ksize 지정 가능
-- 변환된 이미지를 원래 파일명 그대로 출력 폴더에 저장
-  
----
-
-## 현재 디렉토리 구조 (요약)
-
-```text
-2025-opensw-folder-image-batch-converter/
-├─ examples/
-│ ├─ input/
-│ │ └─ sample.png # 데모용 입력 이미지
-│ ├─ output_demo/ # 데모 실행 결과 (gitignore 권장)
-│ ├─ demo_image_ops.py # img_batch 사용 예제 스크립트
-│ └─ folder_copy_basic.py # 폴더 단위 일괄 처리(copy/gray/blur/resize)
-├─ img_batch/ # 이미지 처리 패키지
-│ ├─ init.py
-│ ├─ ops.py
-│ └─ io_utils.py
-├─ .gitignore
-├─ LICENSE
-├─ poetry.lock
-├─ pyproject.toml
-└─ README.md
-```
+This project automates repetitive image processing tasks and improves efficiency when handling large collections of images.
 
 ---
 
-## img_batch 패키지 사용 예시
+## 1. Project Overview
 
-```py
-import cv2
-from img_batch import (
-    resize_image,
-    blur_image,
-    to_gray,
-    rotate_image,
-    flip_image,
-    adjust_brightness_contrast,
-    edge_detect,
-)
+### 1.1 Background
+When working with multiple images, applying identical transformations manually using image editing software can be inefficient and time-consuming.  
+This project was developed to address this issue by enabling **folder-based batch image processing** through a simple command-line interface.
 
-# 이미지 불러오기
-img = cv2.imread("path/to/input.png")
+### 1.2 Purpose
+- Automate repetitive image processing tasks
+- Provide a simple and intuitive CLI-based workflow
+- Improve productivity when handling large image datasets
+- Practice modular Python programming and open-source project structure
 
-# 예시: 리사이즈 + 엣지 검출
-resized = resize_image(img, width=300, height=300)
-edges = edge_detect(resized, threshold1=100, threshold2=200)
+### 1.3 Key Features
+- Batch processing of images in a specified folder
+- Multiple processing modes selectable via command-line options
+- Automatic output directory creation
+- Original file names preserved after processing
 
-cv2.imwrite("output_resize.png", resized)
-cv2.imwrite("output_edges.png", edges)
-```
----
+### 1.4 Supported Processing Modes
 
-## 테스트용 데모 코드(demo_image_ops.py) 사용 예시
+| Mode   | Description |
+|--------|-------------|
+| resize | Resize images to a specified width and height |
+| gray   | Convert images to grayscale |
+| blur   | Apply Gaussian blur to images |
 
-`img_batch` 모듈의 기능 예시와 테스트를 위한 코드의 실행 예시입니다.
-
-poetry가 아닌 다른 환경에서 진행하실때는 앞에 **poetry run** 빼시고 CLI에 입력하시면 됩니다.
-
-```bash
-poetry run python examples/demo_image_ops.py \
-    --input examples/input/sample.png \
-    --output-dir examples/output_demo
-```
+### 1.5 Supported Image Formats
+- .jpg, .jpeg
+- .png
+- .bmp
+- .gif
 
 ---
 
-## 폴더 단위 이미지 일괄 변환(folder_copy_basic.py) 실행 예시
+## 2. Demo / Example Images
 
-```bash
-python examples/folder_copy_basic.py \
-    --input examples/input \
-    --output examples/output_demo \
-    --mode copy
-```
+This section provides visual examples of each image processing feature supported by the program.
 
-흑백 변환(gray):
+For demonstration purposes, it is assumed that **three input images** are placed in the input directory (`examples/input`) before execution.  
+All examples below are generated using the same fixed input images.
 
-```py
-python examples/folder_copy_basic.py \
-    --input examples/input \
-    --output examples/output_gray \
-    --mode gray
-```
+### Fixed Input Images (Common for All Demos)
 
-블러 처리(blur):
+The following images are used as the base input for all processing modes:
 
-```py
-python examples/folder_copy_basic.py \
-    --input examples/input \
-    --output examples/output_blur \
-    --mode blur \
-    --ksize 7
-```
+- ![univ](https://github.com/user-attachments/assets/f7a99bf1-86fa-488a-8643-4233bfbf12f4)
+- <img width="1714" height="1080" alt="generalSigns" src="https://github.com/user-attachments/assets/c6eb64c2-43fe-4470-9db7-7b50b1e2b85b" />
+- <img width="1958" height="1080" alt="mascot3d" src="https://github.com/user-attachments/assets/aa2e1984-4515-4fb8-9105-6401486cf703" />
 
-리사이즈(resize):
 
-```py
-python examples/folder_copy_basic.py \
-    --input examples/input \
-    --output examples/output_resize \
-    --mode resize \
-    --width 800 \
-    --height 600
-```
 
-## Repo Clone 예시
+These images remain unchanged and are reused across all feature demonstrations below.
 
-```bash
-git clone https://github.com/Jaeuk-Han/2025-opensw-folder-image-batch-converter.git
-cd 2025-opensw-folder-image-batch-converter
-```
+---
+
+### 2.1 Resize Feature Demo
+
+Demonstrates the image resizing functionality, where all input images are resized to a fixed resolution.
+
+**Output Images (Resize Mode):**
+- ![univ](https://github.com/user-attachments/assets/2fb976bc-caa8-4bab-ab62-98a74e5ba7fe)
+- <img width="300" height="300" alt="mascot3d" src="https://github.com/user-attachments/assets/6e9598a5-5c9e-457a-b7f3-233d243a3200" />
+- <img width="300" height="300" alt="generalSigns" src="https://github.com/user-attachments/assets/3ab35bd0-30a3-4ba5-a0eb-249d1638f9a5" />
+
+
+**Description:**
+- All input images are resized to the specified width and height (In this example, 300 * 300).
+- The resize operation is applied uniformly to all images in the input folder.
+- Output images preserve the original file names or follow a consistent naming rule.
+
+---
+
+### 2.2 Grayscale Conversion Demo
+
+Demonstrates the grayscale conversion feature, which removes color information from images.
+
+**Output Images (Grayscale Mode):**
+- ![univ](https://github.com/user-attachments/assets/805391d9-dcc7-409f-82ee-7a6a251fc697)
+
+- <img width="1958" height="1080" alt="mascot3d" src="https://github.com/user-attachments/assets/727ddf45-fb90-4f9e-ad9a-be8763d38c78" />
+
+- <img width="1714" height="1080" alt="generalSigns" src="https://github.com/user-attachments/assets/49de2618-c85c-4509-acc4-adf91d7863b8" />
+
+
+**Description:**
+- Each input image is converted from color to grayscale.
+- Only intensity information is preserved.
+- No additional parameters are required for this mode.
+
+---
+
+### 2.3 Blur Effect Demo
+
+Demonstrates the blur feature, which applies a Gaussian blur to images.
+
+
+**Output Images (Blur Mode):**
+- ![univ](https://github.com/user-attachments/assets/b50b4507-04b7-4fe7-9fe7-11e077253d4a)
+- <img width="1958" height="1080" alt="mascot3d" src="https://github.com/user-attachments/assets/01b9d0cd-b82e-41de-91b3-14dfbadcf349" />
+- <img width="1714" height="1080" alt="generalSigns" src="https://github.com/user-attachments/assets/dcfe562c-53f3-4578-b9a5-e01127f8e6d4" />
+
+
+**Description:**
+- A Gaussian blur filter is applied to each input image.
+- The blur intensity depends on the kernel size (`ksize`) parameter.
+- Larger kernel sizes produce stronger blur effects.
+
+
+---
+
+## 3. Dependencies & Installation
+
+### 3.1 Development Environment
+- Python: version 3.x
+- Operating Systems: Windows, macOS, Linux
+
+### 3.2 Required Libraries
+
+| Package         | Description |
+|-----------------|-------------|
+| opencv-python   | Image loading and image processing |
+| numpy           | Numerical operations and image array handling |
+
+### 3.3 Installation Guide
+
+Create a virtual environment (recommended):
+
+- python -m venv .venv
+
+Activate the virtual environment:
+
+- Windows: .\.venv\Scripts\activate  
+- macOS / Linux: source .venv/bin/activate
+
+Install required packages:
+
+- pip install opencv-python numpy
+
+Installed package versions can be checked using:
+
+- pip show opencv-python  
+- pip show numpy
+
+---
+
+## 4. How to Run
+
+### 4.1 Clone the Repository
+- git clone https://github.com/Jaeuk-Han/2025-opensw-folder-image-batch-converter.git
+
+### 4.2 Move to the Project Directory
+- cd 2025-opensw-folder-image-batch-converter
+
+---
+
+### 4.3 Input and Output Directory Structure
+
+Before running the program, users must prepare the input images and understand how input and output folders are handled.
+
+#### Input Directory (User-Defined)
+
+- The input directory is specified by the user using the `-i` or `--input` option.
+- Users must **place the images they want to process in advance** into the chosen input folder.
+- Only image files located directly inside the input folder are processed.
+- Subdirectories are not scanned.
+- Supported image formats: `.jpg`, `.jpeg`, `.png`, `.bmp`, `.gif`
+
+Example input folder:
+examples/input/
+├─ image1.png
+├─ image2.jpg
+└─ image3.jpeg
+
+---
+
+#### Output Directory (User-Defined)
+
+- The output directory is specified using the `-o` or `--output` option.
+- The value provided becomes the **name and location of the output folder**.
+- If the specified output folder does not exist, it is **automatically created** by the program.
+- Each execution can generate a different output folder depending on the processing mode or user preference.
+
+Example output folders:
+examples/result_resize/
+examples/result_gray/
+examples/result_blur/
+
+---
+
+### 4.4 Basic Command Structure
+
+All commands must be executed from the **project root directory**.
+
+- python -m img_batch.main -i examples/input -o OUTPUT_FOLDER -m MODE [OPTIONS]
+
+Explanation:
+- `examples/input`  
+  Fixed input directory containing images to be processed.
+- `OUTPUT_FOLDER`  
+  The folder name or path where processed images will be saved.
+- `MODE`  
+  Processing mode: `resize`, `gray`, or `blur`.
+
+---
+### 4.5 Execution (Detailed)
+
+In this project, **both the input directory and the output directory are specified by the user**.  
+Users must prepare the input folder in advance and choose an output folder name when executing the program.
+
+---
+
+### 4.5.1 Resize Images
+
+Resizes all images in the specified input directory to a user-defined resolution.
+
+**Command Template:**
+- python -m img_batch.main -i INPUT_FOLDER -o OUTPUT_FOLDER -m resize --width WIDTH --height HEIGHT
+
+**Command Example:**
+- python -m img_batch.main -i examples/input -o examples/result_resize -m resize --width 300 --height 300
+
+**Explanation:**
+- Reads all supported image files from `INPUT_FOLDER`.
+- Resizes each image to the specified width and height.
+- Saves resized images into `OUTPUT_FOLDER`.
+- The output folder is automatically created if it does not exist.
+
+**Configurable Parameters:**
+- `INPUT_FOLDER`  
+  Path to the folder containing images to be processed.
+- `OUTPUT_FOLDER`  
+  Name or path of the folder where resized images will be saved.
+- `WIDTH`  
+  Target image width in pixels (positive integer).
+- `HEIGHT`  
+  Target image height in pixels (positive integer).
+
+**Notes:**
+- Both `--width` and `--height` options are **mandatory** in resize mode.
+- Only image files located directly inside the input folder are processed.
+
+---
+
+### 4.5.2 Convert Images to Grayscale
+
+Converts all images in the specified input directory to grayscale.
+
+**Command Template:**
+- python -m img_batch.main -i INPUT_FOLDER -o OUTPUT_FOLDER -m gray
+
+**Command Example:**
+- python -m img_batch.main -i examples/input -o examples/result_gray -m gray
+
+**Explanation:**
+- Converts each image in `INPUT_FOLDER` from color to grayscale.
+- Saves the processed images into `OUTPUT_FOLDER`.
+
+**Configurable Parameters:**
+- `INPUT_FOLDER`  
+  Path to the folder containing images to be processed.
+- `OUTPUT_FOLDER`  
+  Name or path of the folder where grayscale images will be saved.
+
+**Notes:**
+- No additional parameters are required.
+- Original file names are preserved after conversion.
+
+---
+
+### 4.5.3 Apply Blur Effect
+
+Applies a Gaussian blur effect to all images in the specified input directory.
+
+**Command Template:**
+- python -m img_batch.main -i INPUT_FOLDER -o OUTPUT_FOLDER -m blur --ksize KSIZE
+
+**Command Example:**
+- python -m img_batch.main -i examples/input -o examples/result_blur -m blur --ksize 15
+
+**Explanation:**
+- Applies a Gaussian blur filter to each image in `INPUT_FOLDER`.
+- The strength of the blur depends on the kernel size.
+- Output images are saved into `OUTPUT_FOLDER`.
+
+**Configurable Parameters:**
+- `INPUT_FOLDER`  
+  Path to the folder containing images to be processed.
+- `OUTPUT_FOLDER`  
+  Name or path of the folder where blurred images will be saved.
+- `KSIZE`  
+  Kernel size for the Gaussian blur filter.  
+  Must be a positive odd integer (e.g., 3, 5, 7, 15).
+
+**Notes:**
+- Larger `KSIZE` values result in stronger blur effects.
+
+---
+
+### 4.5.4 Summary of Modes and Configurable Parameters
+
+| Mode   | Configurable Parameters                    | Description |
+|--------|--------------------------------------------|-------------|
+| resize | INPUT_FOLDER, OUTPUT_FOLDER, WIDTH, HEIGHT | Resize images |
+| gray   | INPUT_FOLDER, OUTPUT_FOLDER                | Convert images to grayscale |
+| blur   | INPUT_FOLDER, OUTPUT_FOLDER, KSIZE         | Apply Gaussian blur effect |
+
+
+---
+
+### 4.6 Important Notes
+
+- Images **must be placed in `examples/input` before execution**.
+- The output folder name determines where processed images are saved.
+- Different output folder names allow results from different modes to be stored separately.
+
+---
+
+## 5. Error Handling
+- If the input folder does not exist, the program prints an error message and exits
+- If required options are missing, execution stops with an error
+- If no valid image files are found, the program exits without processing
+- Output folders are created automatically if they do not exist
+
+---
+
+## 6. Notes
+- Only image files located directly inside the input folder are processed
+- Subdirectories are not scanned recursively
+- Designed for educational and open-source project purposes
+
+---
+## 7. References
+
+This project uses **OpenCV** for image loading and image processing operations such as resizing, grayscale conversion, and blurring.
+
+- OpenCV Official Website: https://opencv.org/
+
+OpenCV is an open-source computer vision and image processing library widely used in both academic research and industry applications.
+
