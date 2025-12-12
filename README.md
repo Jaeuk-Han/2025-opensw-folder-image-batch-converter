@@ -62,8 +62,9 @@ Demo images and result files can be found in the following directories:
 The following images are used as the base input for all processing modes:
 
 - ![univ](https://github.com/user-attachments/assets/f7a99bf1-86fa-488a-8643-4233bfbf12f4)
-- <img width="1714" height="1080" alt="generalSigns" src="https://github.com/user-attachments/assets/c6eb64c2-43fe-4470-9db7-7b50b1e2b85b" />
 - <img width="1958" height="1080" alt="mascot3d" src="https://github.com/user-attachments/assets/aa2e1984-4515-4fb8-9105-6401486cf703" />
+- <img width="1714" height="1080" alt="generalSigns" src="https://github.com/user-attachments/assets/c6eb64c2-43fe-4470-9db7-7b50b1e2b85b" />
+
 
 
 
