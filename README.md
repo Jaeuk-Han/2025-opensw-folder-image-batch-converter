@@ -46,6 +46,15 @@ This section provides visual examples of each image processing feature supported
 
 For demonstration purposes, it is assumed that **three input images** are placed in the input directory (`examples/input`) before execution.  
 All examples below are generated using the same fixed input images.
+Demo images and result files can be found in the following directories:
+
+- Input images:
+  - `2025-opensw-folder-image-batch-converter/examples/input`
+
+- Processed result images:
+  - Resize results: `2025-opensw-folder-image-batch-converter/examples/result_resize`
+  - Grayscale results: `2025-opensw-folder-image-batch-converter/examples/result_gray`
+  - Blur results: `2025-opensw-folder-image-batch-converter/examples/result_blur`
 
 ### Fixed Input Images (Common for All Demos)
 
