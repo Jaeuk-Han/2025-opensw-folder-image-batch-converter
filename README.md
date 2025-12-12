@@ -44,7 +44,8 @@ This project was developed to address this issue by enabling **folder-based batc
 
 This section provides visual examples of each image processing feature supported by the program.
 
-For demonstration purposes, it is assumed that **three input images** are placed in the input directory (`examples/input`) before execution.  
+For demonstration purposes, the example commands use the `examples/input` directory as the input folder.  
+Users may specify a different input directory when running the program. 
 All examples below are generated using the same fixed input images.
 Demo images and result files can be found in the following directories:
 
@@ -211,8 +212,8 @@ All commands must be executed from the **project root directory**.
 - python -m img_batch.main -i examples/input -o OUTPUT_FOLDER -m MODE [OPTIONS]
 
 Explanation:
-- `examples/input`  
-  Fixed input directory containing images to be processed.
+- `INPUT_FOLDER`  
+  User-specified input directory containing images to be processed.
 - `OUTPUT_FOLDER`  
   The folder name or path where processed images will be saved.
 - `MODE`  
@@ -326,7 +327,7 @@ Applies a Gaussian blur effect to all images in the specified input directory.
 
 ### 4.6 Important Notes
 
-- Images **must be placed in `examples/input` before execution**.
+- Images must be placed in the user-specified input directory before execution.
 - The output folder name determines where processed images are saved.
 - Different output folder names allow results from different modes to be stored separately.
 
